@@ -4,7 +4,7 @@ const NeDB = require('nedb')
 const lib = require('./library')
 
 const mail = require('./mail')
-const uuidv4 = require('uuid/v4')
+const { v4: uuidv4 } = require('uuid')
 
 const authDB = new NeDB({
   filename: path.join(__dirname, '../database/auth.db'),
