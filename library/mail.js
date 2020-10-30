@@ -1,15 +1,14 @@
 const nodeMailer = require('nodemailer')
 
+const secrets = require('../../secrets/mail')
+console.log(secrets)
+
 const mailSetting = {
   host: 'mail.winds-n.com',
   auth: {
-    // user: 'contact@winds-n.com',
     user: 'noreply@winds-n.com',
-    // dovecot のパスワード
-    // pass: '6SHDTEZt6kZ7qggUFFNSlTxsB119N6vu', // contact
-    pass: 'u5sMmQ2eMQW6Wx2RzzeC1YTOCoOTUXpq', // noreply
+    pass: secrets.dovecotPass.noreply,
     port: '465'
-    // port: '587'
   },
   tls: {rejectUnauthorized: false},
   debug:true
@@ -25,7 +24,7 @@ function sendUpdateEmail (userdata) {
   const mailText =
   userdata.name + ' 様\r\n' +
   '\r\n' +
-  '平素よりウィンズアプリのご利用ありがとうございます。\r\n' +
+  'ウィンズアプリのご利用ありがとうございます。\r\n' +
   '登録されたメールアドレスの確認を行います。\r\n' +
   '\r\n' +
   '以下のURLへアクセスしてください。\r\n' +
