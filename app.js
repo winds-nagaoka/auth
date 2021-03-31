@@ -47,7 +47,7 @@ app.post('/adduser', (req, res) => {
   // パラメータが空の場合はエラー
   if (userid === '' || passwd === '') return res.json({status: false})
   // 承認キーが合わない場合はエラー
-  if (lib.getHash(key) !== '0002a3739bc2f722677cb2d9c00450c5b3da7b5972846fef1db51963ba84229eef66baca5251931ce876cc92bda7eb7628a7eed7277d3208d06d13f5ed2acaeb') return res.json({status: false})
+  if (lib.getHash(key) !== '3c669427b4d617aa5574d3a3bed73d51f3f478cb37e8307e8861ad857d91fa01e3c4023b3bb562e77ba7dbdca7515280568d3c412ce7003da2f19e737ac290d8') return res.json({status: false})
   auth.addUser(userid, passwd, clientid, useragent, (err, user) => {
     if (err) return res.json({status: false, err})
     return res.json({status: true, token: lib.getToken(clientid, user), user})
