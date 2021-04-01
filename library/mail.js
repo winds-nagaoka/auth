@@ -1,7 +1,6 @@
 const nodeMailer = require('nodemailer')
 
 const secrets = require('../../secrets/mail')
-console.log(secrets)
 
 const mailSetting = {
   host: 'mail.winds-n.com',
