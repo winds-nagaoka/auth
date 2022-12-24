@@ -8,7 +8,7 @@ import { mail } from './mail'
 import type { Client, User, Callback, Session } from '../types/types'
 
 const authDB = new NeDB({
-  filename: path.join(__dirname, '../database/auth.db'),
+  filename: path.join(__dirname, '../../database/auth.db'),
   autoload: true,
   timestampData: true,
 })
