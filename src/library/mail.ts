@@ -9,7 +9,7 @@ const mailSetting = {
   host: 'mail.winds-n.com',
   auth: {
     user: 'noreply@winds-n.com',
-    pass: secrets.dovecotPass.noreply,
+    pass: secrets?.dovecotPass?.noreply || '',
     port: '465',
   },
   tls: { rejectUnauthorized: false },
