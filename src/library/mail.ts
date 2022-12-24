@@ -1,6 +1,6 @@
 import nodeMailer from 'nodemailer'
 
-import { secrets } from '../../../secrets/mail'
+import { secrets } from 'secrets/mail'
 import { lib } from './library'
 
 import type { User } from '../types/types'
