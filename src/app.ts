@@ -21,6 +21,7 @@ app.use((req, res, next) => {
 
 import { database as auth } from './library/database'
 import { lib } from './library/library'
+import type { Session } from './types/types'
 
 // ルートアクセス
 app.get('/', (req, res) => {
@@ -111,7 +112,8 @@ app.post('/auth', (req, res) => {
 
 // 状態取得
 app.post('/status', (req, res) => {
-  const session = req.body.session
+  const session: Session = req.body.session
+  const userid = session.userid
   console.log('[' + lib.showTime() + '] status: ' + userid)
   auth.checkToken(session, (err, user) => {
     if (err) return res.json({ status: false })

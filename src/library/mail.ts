@@ -1,6 +1,7 @@
 import nodeMailer from 'nodemailer'
 
 import secrets from '../../../secrets/mail'
+import type { User } from '../types/types'
 
 const mailSetting = {
   host: 'mail.winds-n.com',
@@ -17,7 +18,7 @@ const smtp = nodeMailer.createTransport(mailSetting)
 
 import { lib } from './library'
 
-function sendUpdateEmail(userdata) {
+function sendUpdateEmail(userdata: User) {
   console.log('[' + lib.showTime() + '] sendUpdateEmail to: ', userdata.email)
   const emailPath = 'https://member.winds-n.com/valid/' + userdata.emailValidKey
   const mailText =
@@ -42,7 +43,7 @@ function sendUpdateEmail(userdata) {
     'https://winds-n.com'
   const mailContents = {
     from: 'ザ・ウィンド・アンサンブル <noreply@winds-n.com>',
-    to: userdata.email,
+    to: userdata.email || '',
     subject: 'ウィンズよりメールアドレスの確認',
     // html: '',
     text: mailText,

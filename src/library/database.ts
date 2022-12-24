@@ -6,6 +6,8 @@ import { lib } from './library'
 import { mail } from './mail'
 import { v4 as uuidv4 } from 'uuid'
 
+import type { Client, User, Callback, Session } from '../types/types'
+
 const authDB = new NeDB({
   filename: path.join(__dirname, '../database/auth.db'),
   autoload: true,
@@ -15,7 +17,7 @@ const authDB = new NeDB({
 // ユーザー情報をアップデートする
 // in: user[object](たぶん)
 // out: callback(err)
-function updateUser(user, callback) {
+function updateUser(user: User, callback: (err: any) => void) {
   authDB.update({ userid: user.userid }, user, {}, (err, n) => {
     if (err) return callback(err)
     callback(null)
@@ -25,7 +27,7 @@ function updateUser(user, callback) {
 // ユーザー情報を取得する
 // in: userid
 // out: callback(user[object])
-function getUser(userid, callback) {
+function getUser(userid: string, callback: (user: any) => void) {
   authDB.findOne({ userid }, (err, user) => {
     if (err || user === null) return callback(null)
     callback(user)
@@ -35,11 +37,11 @@ function getUser(userid, callback) {
 // ユーザーを新規追加する
 // in: userid, passwd
 // out: callback(token, userkey)
-async function addUser(userid, passwd, clientid, useragent, callback) {
+async function addUser(userid: string, passwd: string, clientid: string, useragent: string, callback: Callback) {
   if (await checkRegs(userid)) return callback({ type: 'alreadyRegisteredError' }, null)
   const hash = lib.getHash(passwd)
   const clientToken = lib.getAuthToken(clientid)
-  const clientList = [
+  const clientList: Client[] = [
     {
       agent: useragent,
       id: clientid,
@@ -47,7 +49,7 @@ async function addUser(userid, passwd, clientid, useragent, callback) {
       lastLogin: new Date().getTime(),
     },
   ]
-  const user = {
+  const user: User = {
     name: userid,
     userid,
     hash,
@@ -64,7 +66,7 @@ async function addUser(userid, passwd, clientid, useragent, callback) {
   })
 }
 
-function checkRegs(userid) {
+function checkRegs(userid: string) {
   return new Promise((resolve) => {
     authDB.findOne({ userid }, (userError, userResult) => {
       if (userError) return resolve({ type: 'DBError' })
@@ -77,7 +79,7 @@ function checkRegs(userid) {
 // ユーザーを削除する
 // in: userid, passwd
 // out: callback(token, userkey)
-function deleteUser(userid, passwd, callback) {
+function deleteUser(userid: string, passwd: string, callback: (value: any) => void) {
   const hash = lib.getHash(passwd)
   getUser(userid, (user) => {
     if (!user || user.hash !== hash) return callback(null)
@@ -91,7 +93,7 @@ function deleteUser(userid, passwd, callback) {
 // ログイン処理
 // in: userid, passwd
 // out: callback(err, token)
-function login(userid, passwd, clientid, useragent, callback) {
+function login(userid: string, passwd: string, clientid: string, useragent: string, callback: Callback) {
   const hash = lib.getHash(passwd)
   const clientToken = lib.getAuthToken(clientid)
   const lastLoginTime = new Date().getTime()
@@ -99,7 +101,7 @@ function login(userid, passwd, clientid, useragent, callback) {
     if (!user || user.hash !== hash) return callback({ type: 'DBError' }, null)
     lib.getToken(clientid, user) ? console.log('Known device') : console.log('New device')
     const newClientList = lib.getToken(clientid, user)
-      ? user.clientList.map((client) => {
+      ? user.clientList.map((client: Client) => {
           return client.id === clientid
             ? {
                 ...client,
@@ -125,11 +127,11 @@ function login(userid, passwd, clientid, useragent, callback) {
   })
 }
 
-function auth(session, callback) {
+function auth(session: Session, callback: Callback) {
   getUser(session.userid, (user) => {
     if (!user) return callback({ type: 'DBError' }, null)
     if (lib.getToken(session.clientid, user) !== session.clientToken) return callback({ type: 'notMatchToken' }, null)
-    const clientList = user.clientList.map((client) => {
+    const clientList = user.clientList.map((client: Client) => {
       if (client.id === session.clientid) client.lastLogin = new Date().getTime()
       return client
     })
@@ -137,7 +139,7 @@ function auth(session, callback) {
       ...user,
       clientList,
     }
-    updateUser(newUser, (err) => {
+    updateUser(newUser, (err: any) => {
       if (err) return callback(err, null)
       return callback(null, newUser)
     })
@@ -146,7 +148,7 @@ function auth(session, callback) {
 
 // in: userid, token
 // out: callback(err, user[object])
-function checkToken(session, callback) {
+function checkToken(session: Session, callback: Callback) {
   getUser(session.userid, (user) => {
     if (!user) return callback({ type: 'DBError' }, null)
     if (lib.getToken(session.clientid, user) !== session.clientToken) return callback({ type: 'notMatchToken' }, null)
@@ -154,7 +156,7 @@ function checkToken(session, callback) {
   })
 }
 
-function changeName(userid, name, callback) {
+function changeName(userid: string, name: string, callback: (value: any) => void) {
   console.log('[listDB] changeName')
   authDB.update({ userid }, { $set: { name } }, {}, (err, newdoc) => {
     if (err) return callback(err)
@@ -162,7 +164,7 @@ function changeName(userid, name, callback) {
   })
 }
 
-function changeMail(user, email, callback) {
+function changeMail(user: User, email: string, callback: Callback) {
   console.log('[listDB] changeMail')
   if (email === '') {
     authDB.update({ userid: user.userid }, { $set: { email: '' } }, {}, (err, newdoc) => {
@@ -173,7 +175,7 @@ function changeMail(user, email, callback) {
     return callback(null, true)
   } else {
     const emailHash = lib.getHash(email)
-    const newUser = {
+    const newUser: User = {
       ...user,
       email,
       emailHash,
@@ -189,7 +191,7 @@ function changeMail(user, email, callback) {
   }
 }
 
-function emailValid(key, callback) {
+function emailValid(key: string, callback: Callback) {
   authDB.findOne({ emailValidKey: key }, (userFindError, user) => {
     if (userFindError) return callback({ err: true, type: 'DBError' }, user)
     if (!user) return callback({ err: true, type: 'noDataError' }, user)
@@ -206,10 +208,10 @@ function emailValid(key, callback) {
   })
 }
 
-function deleteSession(session, clientid, callback) {
+function deleteSession(session: Session, clientid: string, callback: Callback) {
   getUser(session.userid, (user) => {
     if (!user) return callback({ type: 'DBError' }, null)
-    const newClientList = user.clientList.filter((e) => {
+    const newClientList = user.clientList.filter((e: Client) => {
       return e.id !== clientid
     })
     const newUser = {
@@ -223,7 +225,7 @@ function deleteSession(session, clientid, callback) {
   })
 }
 
-function updateAdmin(userid, admin, callback) {
+function updateAdmin(userid: string, admin: boolean, callback: (err: any) => void) {
   console.log('[listDB] updateAdmin')
   authDB.update({ userid }, { $set: { admin } }, {}, (err, newdoc) => {
     if (err) return callback(err)
@@ -231,7 +233,7 @@ function updateAdmin(userid, admin, callback) {
   })
 }
 
-function updateScoreAdmin(userid, scoreAdmin, callback) {
+function updateScoreAdmin(userid: string, scoreAdmin: boolean, callback: (err: any) => void) {
   console.log('[listDB] updateScoreAdmin')
   authDB.update({ userid }, { $set: { scoreAdmin } }, {}, (err, newdoc) => {
     if (err) return callback(err)
@@ -239,7 +241,7 @@ function updateScoreAdmin(userid, scoreAdmin, callback) {
   })
 }
 
-function checkPass(userid, oldPass, newPass, callback) {
+function checkPass(userid: string, oldPass: string, newPass: string, callback: (err: any) => void) {
   const oldHash = lib.getHash(oldPass)
   const newHash = lib.getHash(newPass)
   getUser(userid, (user) => {
