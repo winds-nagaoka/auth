@@ -1,10 +1,10 @@
-const path = require('path')
-const NeDB = require('nedb')
+import path from "path"
+import NeDB from "nedb"
 
-const lib = require('./library')
+import { lib } from "./library"
 
-const mail = require('./mail')
-const { v4: uuidv4 } = require('uuid')
+import { mail } from "./mail"
+import { v4 as uuidv4 }from "uuid"
 
 const authDB = new NeDB({
   filename: path.join(__dirname, '../database/auth.db'),
@@ -246,6 +246,6 @@ function checkPass (userid, oldPass, newPass, callback) {
   })
 }
 
-module.exports = {
+export const database = {
   getUser, addUser, deleteUser, login, auth, checkToken, changeName, changeMail, emailValid, deleteSession, updateAdmin, updateScoreAdmin, checkPass
 }

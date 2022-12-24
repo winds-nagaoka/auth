@@ -1,6 +1,6 @@
-const nodeMailer = require('nodemailer')
+import nodeMailer from "nodemailer"
 
-const secrets = require('../../secrets/mail')
+import secrets from "../../../secrets/mail"
 
 const mailSetting = {
   host: 'mail.winds-n.com',
@@ -15,7 +15,7 @@ const mailSetting = {
 
 const smtp = nodeMailer.createTransport(mailSetting)
 
-const lib = require('./library')
+import { lib }from "./library"
 
 function sendUpdateEmail (userdata) {
   console.log('[' + lib.showTime() + '] sendUpdateEmail to: ', userdata.email)
@@ -54,6 +54,6 @@ function sendUpdateEmail (userdata) {
   })
 }
 
-module.exports = {
+export const mail = {
   sendUpdateEmail
 }

@@ -1,6 +1,7 @@
+import crypto from "crypto"
+
 function getHash (pass) {
   const salt = '::HXAuymPGKKcThn6n'
-  const crypto = require('crypto')
   const hashsum = crypto.createHash('sha512')
   hashsum.update(pass + salt)
   return hashsum.digest('hex')
@@ -43,6 +44,6 @@ function showTime () {
   return time.getFullYear() + '/' + (time.getMonth() + 1) + '/' + time.getDate() + ' ' + z(time.getHours()) + ':' + z(time.getMinutes()) + ':' + z(time.getSeconds())
 }
 
-module.exports = {
+export const lib = {
   getHash, getAuthToken, getToken, getUniqueString, getRandomString, escapeReg, showTime
 }

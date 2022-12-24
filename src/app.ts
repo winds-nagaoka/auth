@@ -1,9 +1,9 @@
-const express = require('express')
+import express from "express"
 const app = express()
 
 app.use(express.urlencoded({extended: true}))
 
-const compression = require('compression')
+import compression from "compression"
 app.use(compression({
   threshold: 0,
   level: 9,
@@ -17,9 +17,8 @@ app.use((req, res, next) => {
   next()
 });
 
-const auth = require('./library/database')
-const mail = require('./library/mail')
-const lib = require('./library/library')
+import { database as auth } from "./library/database"
+import { lib } from "./library/library"
 
 // ルートアクセス
 app.get('/', (req, res) => {
