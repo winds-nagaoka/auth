@@ -16,5 +16,8 @@
     "nodemailer": "^6.4.6",
     "project-version": "^1.2.0",
     "uuid": "^8.1.0"
+  },
+  "devDependencies": {
+    "typescript": "^4.9.4"
   }
 }
