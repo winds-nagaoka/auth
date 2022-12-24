@@ -1,10 +1,7 @@
 const express = require('express')
 const app = express()
 
-const version = require('project-version')
-
-const bodyParser = require('body-parser')
-app.use(bodyParser.urlencoded({extended: true}))
+app.use(express.urlencoded({extended: true}))
 
 const compression = require('compression')
 app.use(compression({
