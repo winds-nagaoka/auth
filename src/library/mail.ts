@@ -1,6 +1,8 @@
 import nodeMailer from 'nodemailer'
 
-import secrets from '../../../secrets/mail'
+import { secrets } from '../../../secrets/mail'
+import { lib } from './library'
+
 import type { User } from '../types/types'
 
 const mailSetting = {
@@ -15,8 +17,6 @@ const mailSetting = {
 }
 
 const smtp = nodeMailer.createTransport(mailSetting)
-
-import { lib } from './library'
 
 function sendUpdateEmail(userdata: User) {
   console.log('[' + lib.showTime() + '] sendUpdateEmail to: ', userdata.email)

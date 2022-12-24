@@ -1,10 +1,9 @@
 import path from 'path'
 import NeDB from 'nedb'
+import { v4 as uuidv4 } from 'uuid'
 
 import { lib } from './library'
-
 import { mail } from './mail'
-import { v4 as uuidv4 } from 'uuid'
 
 import type { Client, User, Callback, Session } from '../types/types'
 

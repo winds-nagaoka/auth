@@ -1,4 +1,5 @@
 import crypto from 'crypto'
+
 import type { User } from '../types/types'
 
 function getHash(pass: string) {
