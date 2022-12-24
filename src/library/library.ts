@@ -15,7 +15,7 @@ function getAuthToken(clientid: string) {
 
 function getToken(id: string, user: User) {
   if (!('clientList' in user)) return false
-  const client = user.clientList.filter((e: any) => {
+  const client = user.clientList.filter((e) => {
     return e.id === id
   })
   if (client.length !== 1) return false

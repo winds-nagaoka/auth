@@ -18,7 +18,7 @@ export type User = {
   regTime: number
 }
 
-export type Callback = (type: any, value: any) => void
+export type Callback<T> = (type: { type: string } | null, value: T | null) => void
 
 export type Session = {
   userid: string
