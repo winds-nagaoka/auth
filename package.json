@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "dev": "ts-node-dev ./src/app.ts",
     "prestart": "yarn build",
     "start": "node ./build/app.js",
     "build": "tsc",
