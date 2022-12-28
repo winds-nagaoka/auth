@@ -52,7 +52,7 @@ app.post('/adduser', (req, res) => {
   )
     return res.json({ status: false })
   auth.addUser(userid, passwd, clientid, useragent, (err, user) => {
-    if (err) return res.json({ status: false, err })
+    if (err || !user) return res.json({ status: false, err })
     return res.json({ status: true, token: lib.getToken(clientid, user), user })
   })
 })
@@ -68,7 +68,7 @@ app.post('/login', (req, res) => {
   const useragent = req.body.useragent
   const version = req.body.version
   auth.login(userid, passwd, clientid, useragent, (err, user) => {
-    if (err) {
+    if (err || !user) {
       console.log('[' + lib.showTime() + '] login: ' + userid + ', (passwd), version: ' + version + ', (NG)')
       return res.json({ status: false })
     }
@@ -93,7 +93,7 @@ app.post('/logout', (req, res) => {
 app.post('/auth', (req, res) => {
   const session = req.body.session
   auth.auth(session, (err, user) => {
-    if (err) {
+    if (err || !user) {
       if (!session.version) {
         console.log('[' + lib.showTime() + '] auth: ' + session.userid + ', request from api (NG)')
       } else {
@@ -135,7 +135,7 @@ app.post('/api/setting/username', (req, res) => {
   const text = req.body.text
   console.log('[' + lib.showTime() + '] api/setting/username: ' + text)
   auth.checkToken(session, (err, user) => {
-    if (err) return res.json({ status: false })
+    if (err || !user) return res.json({ status: false })
     auth.changeName(user.userid, text, (err) => {
       if (err) return res.json({ status: false })
       res.json({ status: true })
@@ -153,7 +153,7 @@ app.post('/api/setting/email', (req, res) => {
   }
   console.log('[' + lib.showTime() + '] api/setting/email: ' + text)
   auth.checkToken(session, (err, user) => {
-    if (err) return res.json({ status: false })
+    if (err || !user) return res.json({ status: false })
     console.log('[api] setting/email => (auth.checkToken) OK: done')
     auth.changeMail(user, text, (err, valid) => {
       if (err) return res.json({ status: false })
@@ -275,7 +275,7 @@ app.post('/user/valid', (req, res) => {
   const key = req.body.key
   console.log('[' + lib.showTime() + '] /user/valid: ', key)
   auth.checkToken(session, (err, user) => {
-    if (err) return res.json({ status: false })
+    if (err || !user) return res.json({ status: false })
     if (user.emailValidKey !== key) return res.json({ status: true, err: { type: 'notMatchError' }, user })
     auth.emailValid(key, (emailValidError, newUser) => {
       console.log(emailValidError ? 'Validation NG' : 'Validation OK')
