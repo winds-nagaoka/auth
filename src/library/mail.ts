@@ -1,6 +1,6 @@
 import nodeMailer from 'nodemailer'
 
-import { secrets } from 'secrets/mail'
+import secrets from 'secrets'
 import { lib } from './library'
 
 import type { User } from '../types/types'
@@ -9,7 +9,7 @@ const mailSetting = {
   host: 'mail.winds-n.com',
   auth: {
     user: 'noreply@winds-n.com',
-    pass: secrets?.dovecotPass?.noreply || '',
+    pass: secrets.mail.dovecotPass.noreply,
     port: '465',
   },
   tls: { rejectUnauthorized: false },
