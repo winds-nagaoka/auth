@@ -887,7 +887,7 @@ safe-buffer@5.2.1:
 
 "secrets@ssh://git@github.com:ryo4004/secrets.git#add-typescript":
   version "1.0.0"
-  resolved "ssh://git@github.com:ryo4004/secrets.git#c3f976ef0479bbfc63948b68499e05772b1af801"
+  resolved "ssh://git@github.com:ryo4004/secrets.git#ccd243602b4c28643457ef6900f16ed63af396b1"
 
 "semver@2 || 3 || 4 || 5":
   version "5.7.1"
