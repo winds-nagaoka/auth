@@ -1,4 +1,10 @@
 import express from 'express'
+import 'dotenv/config'
+
+const ADD_USER_HASH = process.env.ADD_USER_HASH
+const SETTING_ADMIN_HASH = process.env.SETTING_ADMIN_HASH
+const SETTING_SCORE_ADMIN_HASH = process.env.SETTING_SCORE_ADMIN_HASH
+
 const app = express()
 
 app.use(express.urlencoded({ extended: true }))
@@ -47,11 +53,7 @@ app.post('/adduser', (req, res) => {
   // パラメータが空の場合はエラー
   if (userid === '' || passwd === '') return res.json({ status: false })
   // 承認キーが合わない場合はエラー
-  if (
-    lib.getHash(key) !==
-    '3c669427b4d617aa5574d3a3bed73d51f3f478cb37e8307e8861ad857d91fa01e3c4023b3bb562e77ba7dbdca7515280568d3c412ce7003da2f19e737ac290d8'
-  )
-    return res.json({ status: false })
+  if (lib.getHash(key) !== ADD_USER_HASH) return res.json({ status: false })
   auth.addUser(userid, passwd, clientid, useragent, (err, user) => {
     if (err || !user) return res.json({ status: false, err })
     return res.json({ status: true, token: lib.getToken(clientid, user), user })
@@ -215,10 +217,7 @@ app.post('/api/setting/admin', (req, res) => {
     if (err) return res.json({ status: false })
     console.log('[api] setting/admin')
     if (admin === 'true') {
-      if (
-        lib.getHash(pass) ===
-        'e0d8d124ecbaa8fdacd0668b6e648f333cc19371b257f80d8447d87f1e5f4aa42e3d8924e18433678b204a2d412dfbe83ee29f6f628030e8a75bf49767a7ecbe'
-      ) {
+      if (lib.getHash(pass) === SETTING_ADMIN_HASH) {
         auth.updateAdmin(session.userid, true, (err) => {
           if (err) return res.json({ status: false })
           console.log(session.userid + ': admin available')
@@ -247,10 +246,7 @@ app.post('/api/setting/score/admin', (req, res) => {
     if (err) return res.json({ status: false })
     console.log('[api] setting/score/admin')
     if (admin === 'true') {
-      if (
-        lib.getHash(pass) ===
-        '3d08d4095c02798a2465ac7f01c6f23b965d6d15ea1bb28bacf44bde465429d18831443969bef752d6cb24f7384244f9b2cc28069f29e3d9d0a922f0c7775da5'
-      ) {
+      if (lib.getHash(pass) === SETTING_SCORE_ADMIN_HASH) {
         auth.updateScoreAdmin(session.userid, true, (err) => {
           if (err) return res.json({ status: false })
           console.log(session.userid + ': score admin available')

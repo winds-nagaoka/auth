@@ -1,15 +1,18 @@
 import nodeMailer from 'nodemailer'
 
-import secrets from 'secrets'
 import { lib } from './library'
 
 import type { User } from '../types/types'
+
+import 'dotenv/config'
+
+const MAIL_DOVECOT_PASS_NOREPLY = process.env.MAIL_DOVECOT_PASS_NOREPLY as string
 
 const mailSetting = {
   host: 'mail.winds-n.com',
   auth: {
     user: 'noreply@winds-n.com',
-    pass: secrets.mail.dovecotPass.noreply,
+    pass: MAIL_DOVECOT_PASS_NOREPLY,
     port: '465',
   },
   tls: { rejectUnauthorized: false },
