@@ -4,3 +4,9 @@
 /node_modules
 
 *.db
+
+# build
+/build
+
+# env
+.env
